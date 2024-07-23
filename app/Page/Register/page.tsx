@@ -1,13 +1,43 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import PrimaryNav from "../../Components/Headers/PrimaryNav";
+import axios from "axios";
+import { error } from "console";
 
 function Register() {
+  const [UserName, setUsername] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Password, setPassword] = useState("");
+
+  const userData = {
+    UserName,
+    Email,
+    Password,
+  };
+
+  console.log("the data is:", UserName, Email, Password);
+
+  function registerUser() {
+    axios
+      .post("http://localhost:3001/register", userData)
+      .then((resp) => {
+        console.log("Data succesfully posted!", resp.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    setUsername("");
+    setEmail("");
+    setPassword("");
+  }
   return (
     <>
       <PrimaryNav />
       <div className=" w-full h-screen flex">
         <div className=" w-[50%] h-screen">
-          <h1 className=" text-3xl text-center mt-32 font-bold text-red-600">
+          <h1 className=" text-3xl text-center mt-24 font-bold text-red-600">
             {" "}
             Register Your Account{" "}
           </h1>
@@ -23,8 +53,11 @@ function Register() {
             <input
               type="text"
               name="firstname"
+              placeholder="Your Name "
+              value={UserName}
+              onChange={(event) => setUsername(event.target.value)}
               id="firstname"
-              className=" border-b-2 border-red-600 bg-red-600 w-64 ml-48 text-center text-white font-semibold rounded-md"
+              className=" border-b-2 border-red-600 bg-red-600 w-80 ml-36 text-center text-white font-semibold rounded-md"
             />
 
             <p className=" text-red-600 font-semibold text-center text-lg mt-6">
@@ -32,9 +65,12 @@ function Register() {
             </p>
             <input
               type="email"
+              placeholder="Enter Email"
+              value={Email}
+              onChange={(event) => setEmail(event.target.value)}
               name="firstname"
               id="firstname"
-              className=" border-b-2 border-red-600 bg-red-600 w-64 ml-48 text-center text-white font-semibold rounded-md"
+              className=" border-b-2 border-red-600 bg-red-600 w-80 ml-36 text-center text-white font-semibold rounded-md"
             />
 
             <p className=" text-red-600 font-semibold text-center text-lg mt-6">
@@ -42,13 +78,19 @@ function Register() {
             </p>
             <input
               type="password"
+              placeholder="Create Password"
               name="firstname"
+              value={Password}
+              onChange={(event) => setPassword(event.target.value)}
               id="firstname"
-              className=" border-b-2 border-red-600 bg-red-600 w-64 ml-48 text-center text-white font-semibold rounded-md "
+              className=" border-b-2 border-red-600 bg-red-600 w-80 ml-36 text-center text-white font-semibold rounded-md "
             />
 
             <div className=" flex justify-center mt-8">
-              <button className=" bg-orange-500 w-36 font-semibold rounded-md text-white hover:bg-orange-400">
+              <button
+                className=" bg-orange-500 w-36 font-semibold rounded-md text-white hover:bg-orange-400"
+                onClick={registerUser}
+              >
                 Register
               </button>
             </div>
