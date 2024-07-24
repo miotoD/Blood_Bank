@@ -5,8 +5,8 @@ import Link from "next/link";
 export default function MyComponent() {
   return (
     <div>
-      <div className="pNav w-full bg-red-500 h-20 flex justify-center  items-center font-semibold Playwrite BE VL">
-        <ul className=" flex gap-9 text-white  ml-64 -mr-60 ">
+      <div className="pNav w-full bg-black h-20 flex justify-center  items-center font-semibold Playwrite BE VLS border-b-white border-2px">
+        <ul className=" flex gap-36 text-red-500 text-md ml-40  w-[700px] ">
           <Link href="/">
             <ul className=" hover:cursor-pointer">Home</ul>{" "}
           </Link>
@@ -16,7 +16,7 @@ export default function MyComponent() {
           </Link>
         </ul>
 
-        <div className=" flex justify-end  w-[540px] ml-36">
+        <div className=" flex justify-end  w-[540px] mr-24">
           <ul className=" flex gap-9 text-white hover:cursor-pointer  ">
             <Link href="/Page/Login">
               {" "}

@@ -88,7 +88,7 @@ function Register() {
 
             <div className=" flex justify-center mt-8">
               <button
-                className=" bg-orange-500 w-36 font-semibold rounded-md text-white hover:bg-orange-400"
+                className=" bg-orange-500 w-48 font-semibold rounded-md text-white hover:bg-orange-400"
                 onClick={registerUser}
               >
                 Register
