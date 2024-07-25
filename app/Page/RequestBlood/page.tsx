@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import PrimaryNavbar from "../../Components/Headers/PrimaryNav";
 import BloodForm from "@/app/Components/Form/bloodForm";
+import Footer from "@/app/Components/Footers/Footer";
 
 function RequestBlood() {
   const [form, setForm] = useState(false);
