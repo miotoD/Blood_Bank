@@ -1,6 +1,7 @@
 import React from "react";
 import PrimaryNav from "./Components/Headers/PrimaryNav";
 import Link from "next/link";
+import Footer from "./Components/Footers/Footer";
 
 function page() {
   return (
@@ -97,6 +98,7 @@ function page() {
           style={{ backgroundImage: "url('/bo.jpeg')" }}
         ></div>
       </div>
+      <Footer />
     </>
   );
 }
