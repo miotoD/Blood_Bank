@@ -30,7 +30,6 @@ function BloodForm({ close }) {
     await new Promise((resolve) => {
       setTimeout(() => {
         resolve;
-        console.log("Promise resolve vayo", resolve);
         console.log("data sent succesfully", data);
         reset();
       }, 1000);
