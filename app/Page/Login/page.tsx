@@ -1,14 +1,40 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PrimaryNav from "../../Components/Headers/PrimaryNav";
-import { url } from "inspector";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import jwt_decode, { jwtDecode } from "jwt-decode";
 
 function Login() {
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
+  const [accessToken, setAccessToken] = useState("");
 
-  console.log("User credentials:", Email, Password);
+  const router = useRouter();
+
+  const userCredentials = {
+    Email,
+    Password,
+  };
+
+  const URL = "http://localhost:3001/login";
+
+  function handleLogin() {
+    axios.post(URL, userCredentials).then((resp) => {
+      console.log("Response is:", resp.data);
+      alert(resp.data);
+      localStorage.setItem("accessToken", resp.data.token);
+
+      setAccessToken(localStorage.getItem("accessToken"));
+    });
+
+    if (accessToken) {
+      router.push("/");
+    }
+  }
+
+  console.log("The access token of the user is:", accessToken);
   return (
     <>
       <div className=" w-full h-screen flex flex-col">
@@ -52,7 +78,10 @@ function Login() {
               className=" w-80 ml-40 bg-red-400 h-8 border-b-red-600 rounded-md text-center text-white font-semibold "
             />
             <div className=" flex justify-center mt-5">
-              <button className=" bg-orange-500 w-36 font-semibold rounded-md text-white hover:bg-orange-400 h-8">
+              <button
+                className=" bg-orange-500 w-36 font-semibold rounded-md text-white hover:bg-orange-400 h-8"
+                onClick={handleLogin}
+              >
                 LogIn
               </button>
             </div>

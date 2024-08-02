@@ -1,9 +1,43 @@
-import React from "react";
-import PrimaryNav from "./Components/Headers/PrimaryNav";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import Footer from "./Components/Footers/Footer";
+import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation";
 
 function page() {
+  const [accessToken, setAccessToken] = useState("");
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    setAccessToken(token);
+  }, []);
+
+  function handleLogout() {
+    localStorage.removeItem("accessToken");
+    location.reload();
+    console.log("Logged Out");
+  }
+
+  //function to removeToken after expiration
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      const decoded = jwtDecode(token);
+      const expiryTIme = decoded.exp * 1000;
+
+      if (Date.now() > expiryTIme) {
+        localStorage.removeItem("accessToken");
+        console.log("Token removed!");
+      }
+    }
+  }, []);
+
   return (
     <>
       <div
@@ -28,16 +62,29 @@ function page() {
           </Link>
         </ul>
 
-        <div className="w-48 h-24 ml-96 ">
-          <ul className=" text-white  font-semibold text-md h-fit flex gap-14 py-5 ">
-            <Link href="/Page/Login">
-              <ul className="hover:cursor-pointer">LogIn</ul>
-            </Link>
-            <Link href="/Page/Register">
-              <ul className="hover:cursor-pointer">Register</ul>{" "}
-            </Link>
-          </ul>
-        </div>
+        {accessToken ? (
+          <div className="w-48 h-24 ml-96 ">
+            <ul className=" text-red-300  font-semibold text-md h-fit flex gap-14 py-5 ">
+              <Link href="/">
+                <ul className="hover:cursor-pointer">Profile</ul>
+              </Link>
+              <button onClick={handleLogout}>
+                <ul className="hover:cursor-pointer">Logout</ul>{" "}
+              </button>
+            </ul>
+          </div>
+        ) : (
+          <div className="w-48 h-24 ml-96 ">
+            <ul className=" text-red-300  font-semibold text-md h-fit flex gap-14 py-5 ">
+              <Link href="/Page/Login">
+                <ul className="hover:cursor-pointer">Login</ul>
+              </Link>
+              <Link href="/Page/Register">
+                <ul className="hover:cursor-pointer">Register</ul>{" "}
+              </Link>
+            </ul>
+          </div>
+        )}
       </div>
 
       <div className="midSec h-80  w-full flex mt-20 px-7 py-3 ">
@@ -77,24 +124,24 @@ function page() {
         </div>
       </div>
 
-      <div className=" mt-28 w-full h-20 bg-red-500 flex items-center justify-center ">
-        <h1 className=" text-white font-semibold text-2xl">
+      <div className=" mt-28 w-full h-20 bg-gray-100 flex items-center justify-center ">
+        <h1 className=" text-red-400 font-semibold text-2xl">
           Blood Organizations in Nepal
         </h1>
       </div>
 
       <div className=" w-full h-80 flex px-16 gap-4 mt-7">
         <div
-          className=" w-96 h-full bg-cover bg-center "
+          className=" w-96 h-full bg-cover bg-center shadow-lg rounded-full "
           style={{ backgroundImage: "url('/bo.jpeg')" }}
         ></div>
         <div
-          className=" w-96 h-full bg-blue-400 bg-cover bg-center"
+          className=" w-96 h-full bg-blue-400 bg-cover bg-center shadow-lg rounded-full"
           style={{ backgroundImage: "url('/bo.jpeg')" }}
         ></div>
 
         <div
-          className=" w-96 h-full bg-red-400 bg-center bg-cover"
+          className=" w-96 h-full bg-red-400 bg-center bg-cover shadow-lg rounded-full"
           style={{ backgroundImage: "url('/bo.jpeg')" }}
         ></div>
       </div>

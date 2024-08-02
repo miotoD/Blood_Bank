@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import PrimaryNav from "../../Components/Headers/PrimaryNav";
 import axios from "axios";
-import { error } from "console";
+import Footer from "@/app/Components/Footers/Footer";
 
 function Register() {
   const [UserName, setUsername] = useState("");
@@ -17,6 +17,8 @@ function Register() {
   };
 
   console.log("the data is:", UserName, Email, Password);
+
+  const URL = "http://localhost:3001/register";
 
   function registerUser() {
     axios
@@ -100,6 +102,7 @@ function Register() {
           <img src="/why.jpeg" alt="background" className="  w-full" />
         </div>
       </div>
+      <Footer />
     </>
   );
 }

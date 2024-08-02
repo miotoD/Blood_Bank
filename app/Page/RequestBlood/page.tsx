@@ -3,10 +3,17 @@
 import React, { useState } from "react";
 import PrimaryNavbar from "../../Components/Headers/PrimaryNav";
 import BloodForm from "@/app/Components/Form/bloodForm";
-import Footer from "@/app/Components/Footers/Footer";
 
 function RequestBlood() {
   const [form, setForm] = useState(false);
+
+  // const obj1 = {
+  //   name: "mioto",
+  //   age: 19,
+  // };
+
+  // const { name } = obj1;
+  // console.log(name);
 
   function openForm() {
     setForm(true);

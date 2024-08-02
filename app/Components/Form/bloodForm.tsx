@@ -2,14 +2,46 @@
 import React from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { resolve } from "path";
+import { da } from "date-fns/locale";
 
 function BloodForm({ close }) {
-  function closePopup() {
-    close(false);
-  }
+  type formFields = {
+    bloodGroup: string;
+    hospitalName: string;
+    bloodPint: string;
+    requiredBy: string;
+  };
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<formFields>();
 
   const [selectedDate, setSelectedDate] = useState("");
   const [calendarPopup, setCalendarPopup] = useState(false);
+
+  // The handleSubmit function of react-hook-form calls this submitForm function
+  const submitForm: SubmitHandler<formFields> = async (data) => {
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve;
+        console.log("Promise resolve vayo", resolve);
+        console.log("data sent succesfully", data);
+        reset();
+      }, 1000);
+    });
+  };
+
+  console.log("The date is:", selectedDate);
+
+  function closePopup() {
+    close(false);
+  }
 
   function handleCalendar() {
     setCalendarPopup(true);
@@ -21,77 +53,124 @@ function BloodForm({ close }) {
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1
-          className=" text-black font-extrabold text-2xl text-end hover:cursor-pointer hover:text-red-500"
-          onClick={closePopup}
-        >
-          X
-        </h1>
-        <h1 className="text-2xl font-bold mb-8 text-red-500 text-center">
-          Request Blood Form
-        </h1>
-        <label htmlFor="bloodGroup" className=" text-black ">
-          {" "}
-          BloodGroup
-        </label>
-        <select
-          name="bloodGroup"
-          id="bloodGroup"
-          className=" border-[2px] border-black text-black ml-3 p-1"
-        >
-          <option value="A+">A+</option>
-          <option value="A-">A-</option>
-          <option value="AB+">AB+</option>
-          <option value="AB-">AB-</option>
-          <option value="B+">B+</option>
-          <option value="B-">B-</option>
-          <option value="O+">O+</option>
-          <option value="O-">O-</option>
-        </select>
-        <br />
-        <input
-          type="text"
-          placeholder="Hospital Name"
-          className="w-[420px] mb-4 p-2 border-b-2 border-gray-300 focus:outline-none text-black font-semibold mt-4"
-        />
-        <br />
-        <input
-          type="text"
-          placeholder="Blood Pint"
-          className="w-[420px] mb-4 p-2 border-b-2 border-gray-300 focus:outline-none text-black font-semibold"
-        />
-        <br />
-        <input
-          type="text"
-          placeholder="Required By"
-          className="w-[420px] mb-4 p-2 border-b-2 border-gray-300 focus:outline-none text-black font-semibold hover:bg-gray-200 hover:cursor-pointer"
-          onClick={handleCalendar}
-        />
-        <img
-          src="/calendar.jpg"
-          alt="calendar"
-          className=" h-8 w-8 -mt-14 ml-96 hover:cursor-pointer"
-          onClick={handleCalendar}
-        />
+    <form onSubmit={handleSubmit(submitForm)}>
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
+        <div className="bg-white p-8 rounded-lg shadow-lg">
+          <h1
+            className=" text-black font-extrabold text-2xl text-end hover:cursor-pointer hover:text-red-400"
+            onClick={closePopup}
+          >
+            X
+          </h1>
+          <h1 className="text-2xl font-bold mb-8 text-red-500 text-center">
+            Request Blood Form
+          </h1>
+          <label htmlFor="bloodGroup" className=" text-black ">
+            {" "}
+            BloodGroup
+          </label>
+          <select
+            id="bloodGroup"
+            className=" border-[2px]  text-black ml-3 p-1"
+            {...register("bloodGroup", {
+              required: "Required Blood Group",
+            })}
+          >
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+          {errors.bloodGroup && (
+            <div className=" text-red-400">{errors.bloodGroup.message}</div>
+          )}
+          <br />
 
-        <br />
-        <button className="bg-orange-400 w-96 p-2 mt-4 rounded-lg font-semibold hover:bg-orange-300">
-          Request
-        </button>
+          <input
+            type="text"
+            list="hospitals"
+            placeholder="Hospital Name"
+            {...register("hospitalName", {
+              required: " Reuired Hospital Name",
+            })}
+            className="w-[420px] mb-4 p-2 border-b-2 border-gray-300 focus:outline-none text-black font-semibold mt-4"
+          />
+          {errors.hospitalName && (
+            <div className=" text-red-400">{errors.hospitalName.message}</div>
+          )}
+
+          <datalist id="hospitals">
+            <option value="Scheer Memorial Hospital" />
+            <option value="Kathmandu Medical Hospital" />
+            <option value="BNB Hospital" />
+            <option value="Kathmandu Teaching Hospital" />
+          </datalist>
+          <br />
+
+          <input
+            type="text"
+            {...register("bloodPint", {
+              required: "Required Blood Pint",
+            })}
+            placeholder="Blood Pint"
+            className="w-[420px] mb-4 p-2 border-b-2 border-gray-300 focus:outline-none text-black font-semibold"
+          />
+          {errors.bloodPint && (
+            <div className=" text-red-400">{errors.bloodPint.message}</div>
+          )}
+          <br />
+          <input
+            type="text"
+            placeholder="Required By"
+            {...register("requiredBy", {
+              required: "Date Required",
+            })}
+            readOnly
+            className="w-[420px] mb-4 p-2 border-b-2 border-gray-300 focus:outline-none text-black font-semibold hover:bg-gray-200 hover:cursor-pointer"
+            onClick={handleCalendar}
+          />
+          <img
+            src="/calendar.jpg"
+            alt="calendar"
+            className=" h-8 w-8 -mt-14 ml-96 hover:cursor-pointer"
+            onClick={handleCalendar}
+          />
+
+          {errors.requiredBy && (
+            <div className=" text-red-400 mt-3">
+              {errors.requiredBy.message}
+            </div>
+          )}
+
+          <br />
+          <button
+            className="bg-orange-400 w-96 p-2 mt-4 rounded-lg font-semibold hover:bg-orange-300"
+            type="submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Loading...." : "Request"}
+          </button>
+        </div>
+
+        {calendarPopup ? (
+          <Calendar
+            className=" bg-white text-red-500 w-fit h-[300px] mt-[10px] ml-[60px] absolute"
+            selected={selectedDate}
+            onDayClick={(date) => {
+              const formattedDate = date.toLocaleDateString();
+              setSelectedDate(formattedDate);
+              setValue("requiredBy", formattedDate);
+            }}
+          />
+        ) : (
+          ""
+        )}
       </div>
-
-      {calendarPopup ? (
-        <Calendar
-          className=" bg-white text-red-500 w-fit mt-[20px] ml-[-90px] absolute"
-          selected={selectedDate}
-          onDayClick={(date) => setSelectedDate(date)}
-        />
-      ) : (
-        ""
-      )}
-    </div>
+    </form>
   );
 }
 
