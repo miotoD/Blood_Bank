@@ -3,15 +3,15 @@ import React from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { resolve } from "path";
-import { da } from "date-fns/locale";
+
+import axiosClient from "@/app/axios-client/axios-client";
 
 function BloodForm({ close }) {
   type formFields = {
-    bloodGroup: string;
-    hospitalName: string;
-    bloodPint: string;
-    requiredBy: string;
+    BloodType: string;
+    HospitalName: string;
+    BloodPint: string;
+    RequiredBy: string;
   };
 
   const {
@@ -27,16 +27,16 @@ function BloodForm({ close }) {
 
   // The handleSubmit function of react-hook-form calls this submitForm function
   const submitForm: SubmitHandler<formFields> = async (data) => {
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve;
-        console.log("data sent succesfully", data);
-        reset();
-      }, 1000);
-    });
+    try {
+      await axiosClient
+        .post("http://localhost:3001/blood_request", data)
+        .then((resp) => {
+          console.log("The response got is:", resp.data);
+        });
+    } catch (error) {
+      console.log("Error occurred!", error);
+    }
   };
-
-  console.log("The date is:", selectedDate);
 
   function closePopup() {
     close(false);
@@ -71,7 +71,7 @@ function BloodForm({ close }) {
           <select
             id="bloodGroup"
             className=" border-[2px]  text-black ml-3 p-1"
-            {...register("bloodGroup", {
+            {...register("BloodType", {
               required: "Required Blood Group",
             })}
           >
@@ -84,8 +84,8 @@ function BloodForm({ close }) {
             <option value="O+">O+</option>
             <option value="O-">O-</option>
           </select>
-          {errors.bloodGroup && (
-            <div className=" text-red-400">{errors.bloodGroup.message}</div>
+          {errors.BloodPint && (
+            <div className=" text-red-400">{errors.BloodPint.message}</div>
           )}
           <br />
 
@@ -93,13 +93,13 @@ function BloodForm({ close }) {
             type="text"
             list="hospitals"
             placeholder="Hospital Name"
-            {...register("hospitalName", {
+            {...register("HospitalName", {
               required: " Reuired Hospital Name",
             })}
             className="w-[420px] mb-4 p-2 border-b-2 border-gray-300 focus:outline-none text-black font-semibold mt-4"
           />
-          {errors.hospitalName && (
-            <div className=" text-red-400">{errors.hospitalName.message}</div>
+          {errors.HospitalName && (
+            <div className=" text-red-400">{errors.HospitalName.message}</div>
           )}
 
           <datalist id="hospitals">
@@ -112,20 +112,20 @@ function BloodForm({ close }) {
 
           <input
             type="text"
-            {...register("bloodPint", {
+            {...register("BloodPint", {
               required: "Required Blood Pint",
             })}
             placeholder="Blood Pint"
             className="w-[420px] mb-4 p-2 border-b-2 border-gray-300 focus:outline-none text-black font-semibold"
           />
-          {errors.bloodPint && (
-            <div className=" text-red-400">{errors.bloodPint.message}</div>
+          {errors.BloodPint && (
+            <div className=" text-red-400">{errors.BloodPint.message}</div>
           )}
           <br />
           <input
             type="text"
             placeholder="Required By"
-            {...register("requiredBy", {
+            {...register("RequiredBy", {
               required: "Date Required",
             })}
             readOnly
@@ -139,9 +139,9 @@ function BloodForm({ close }) {
             onClick={handleCalendar}
           />
 
-          {errors.requiredBy && (
+          {errors.RequiredBy && (
             <div className=" text-red-400 mt-3">
-              {errors.requiredBy.message}
+              {errors.RequiredBy.message}
             </div>
           )}
 
@@ -151,7 +151,7 @@ function BloodForm({ close }) {
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Loading...." : "Request"}
+            {isSubmitting ? "Requesting..." : "Request"}
           </button>
         </div>
 
@@ -162,7 +162,7 @@ function BloodForm({ close }) {
             onDayClick={(date) => {
               const formattedDate = date.toLocaleDateString();
               setSelectedDate(formattedDate);
-              setValue("requiredBy", formattedDate);
+              setValue("RequiredBy", formattedDate);
             }}
           />
         ) : (

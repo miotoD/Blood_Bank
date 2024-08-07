@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { createContext, useState } from "react";
 import Link from "next/link";
 import Footer from "./Components/Footers/Footer";
 import { useEffect } from "react";
@@ -65,7 +65,7 @@ function page() {
         {accessToken ? (
           <div className="w-48 h-24 ml-96 ">
             <ul className=" text-red-300  font-semibold text-md h-fit flex gap-14 py-5 ">
-              <Link href="/">
+              <Link href="/Page/Profile">
                 <ul className="hover:cursor-pointer">Profile</ul>
               </Link>
               <button onClick={handleLogout}>
@@ -130,7 +130,7 @@ function page() {
         </h1>
       </div>
 
-      <div className=" w-full h-80 flex px-16 gap-4 mt-7">
+      <div className=" w-full h-80 flex px-16 gap-4 mt-7 mb-4">
         <div
           className=" w-96 h-full bg-cover bg-center shadow-lg rounded-full "
           style={{ backgroundImage: "url('/bo.jpeg')" }}

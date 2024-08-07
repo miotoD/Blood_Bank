@@ -1,70 +1,70 @@
 "use client";
 
-import { resolve } from "path";
+import { clear } from "console";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useState, useRef } from "react";
 
 function Practise() {
-  type formField = {
-    Username: string;
-    Password: string;
+  const [numbers, setNumbers] = useState("");
+
+  const handleClick = (value) => {
+    setNumbers((prevInput) => prevInput + value);
   };
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<formField>();
+  function clearAll() {
+    setNumbers("");
+  }
 
-  const submitForm = async (data) => {
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve;
-        console.log("Promise pani resolve vayo", resolve);
-        console.log(" data sent succesfully", data);
-        reset();
-      }, 3000);
-    });
-  };
+  function calculateResult() {
+    setNumbers(eval(numbers));
+  }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(submitForm)}>
-        <label htmlFor="username">Username</label>
-        <input
-          className=" border-[2px] border-black m-4"
-          {...register("Username", {
-            required: "UserName required!",
-          })}
-        />
-        {errors.Username && (
-          <div className=" text-red-500">{errors.Username.message}</div>
-        )}
+    <div className=" w-screen h-screen flex justify-center items-center">
+      <div className=" border-[2px] border-black h-96 w-80 px-4">
+        <div className=" border-[2px] border-green-600 h-20 w-72 mt-4">
+          {numbers}
+        </div>
+        <div className=" border-[2px]  h-72 flex">
+          <div className=" border-[2px] border-black mt-8 h-56 w-48 p-2 flex flex-wrap gap-1">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((number) => (
+              <button
+                className=" rounded-lg border-[1px] border-black w-9 hover:bg-black hover:text-white h-8"
+                key={number}
+                onClick={() => handleClick(number.toString())}
+              >
+                {number}
+              </button>
+            ))}
+          </div>
 
-        <label htmlFor="Password">Password</label>
-        <input
-          className="border-[2px] border-black"
-          {...register("Password", {
-            minLength: {
-              value: 8,
-              message: " Minimum 8 characters required",
-            },
-            required: "Password required!",
-          })}
-        />
-        {errors.Password && (
-          <div className=" text-red-500">{errors.Password.message}</div>
-        )}
+          <div className="  h-full w-fit py-4 ml-4 mt-4">
+            {["+", "-", "/", "*"].map((symbol) => (
+              <button
+                key={symbol}
+                className=" rounded-lg border-[1px] border-black w-9 hover:bg-black hover:text-white h-8 m-2"
+                onClick={() => handleClick(symbol)}
+              >
+                {symbol}
+              </button>
+            ))}
 
-        <button
-          className=" border-blue-400 border-[2px] ml-3"
-          disabled={isSubmitting}
-        >
-          {" "}
-          {isSubmitting ? "Sending...." : "Submit"}
-        </button>
-      </form>
+            <button
+              className="rounded-lg border-[1px] border-black w-9 hover:bg-black hover:text-white h-8 m-2"
+              onClick={clearAll}
+            >
+              C
+            </button>
+
+            <button
+              className="rounded-lg border-[1px] border-black w-9 hover:bg-black hover:text-white h-8 m-2"
+              onClick={calculateResult}
+            >
+              =
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
